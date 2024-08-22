@@ -6,6 +6,7 @@ import com.docservice.backend.entity.Document;
 import com.docservice.backend.entity.Form;
 import com.docservice.backend.repository.ClientRepository;
 import com.docservice.backend.service.AdminService;
+import com.docservice.backend.service.ClientService;
 import com.docservice.backend.service.DocumentService;
 import com.docservice.backend.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
+
 
     @Autowired
     private FormService formService;
@@ -27,8 +30,12 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private ClientService clientService;
 
     // Criar um novo formulário
     @PostMapping("/forms")
@@ -65,30 +72,47 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    // Adicionar novo admin
     @PostMapping("/newadmin")
     public ResponseEntity<Admin> newAdmin(@RequestBody Admin newadmin) {
         Admin admin = adminService.saveAdmin(newadmin);
         return ResponseEntity.ok(admin);
     }
 
+    // Adicionar cliente
     @PostMapping("/newclient")
     public ResponseEntity<Client> newClient(@RequestBody Client newClient) {
-        Client client = clientRepository.save(newClient);
-        return ResponseEntity.ok(newClient);
+        Client client = adminService.saveClient(newClient);
+        return ResponseEntity.ok(client);
     }
 
+    // Listar todos os admin
     @GetMapping
     public ResponseEntity<List<Admin>> getAllAdmin() {
         List<Admin> admins = adminService.getAllAdmins();
         return ResponseEntity.ok(admins);
     }
 
-    @GetMapping("/admin/{id}")
+    @GetMapping("/client")
+    public ResponseEntity<List<Client>> getAllClient() {
+        List<Client> clients = adminService.getAllClients();
+        return ResponseEntity.ok(clients);
+    }
+
+    // Excluir administrador
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
         adminService.deleteAdmin(id);
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/client/{cpf}")
+    public ResponseEntity<Optional<Client>> findClientById(@PathVariable String cpf) {
+        Optional<Client> client = adminService.getClientByCpf(cpf);
+        return ResponseEntity.ok(client);
+    }
+
+    // Atualizar administrador
     @PutMapping("/admin/{id}")
     public ResponseEntity<Admin> updateAdmin(@PathVariable Long id, @RequestBody Admin admin) {
         Optional<Admin> updateAdmin = adminService.getAdminById(id);

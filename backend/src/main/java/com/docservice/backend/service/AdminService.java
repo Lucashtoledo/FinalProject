@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 public class AdminService {
 
+
     @Autowired
     private AdminRepository adminRepository;
 
@@ -23,8 +24,16 @@ public class AdminService {
         return adminRepository.findAll();
     }
 
+    public List<Client> getAllClients() {
+        return clientRepository.findAll();
+    }
+
     public Optional<Admin> getAdminById(Long id) {
         return adminRepository.findById(id);
+    }
+
+    public Optional<Client> getClientByCpf(String cpf) {
+        return clientRepository.findByCpf(cpf);
     }
 
     public Admin saveAdmin(Admin admin) {
@@ -35,8 +44,8 @@ public class AdminService {
         adminRepository.deleteById(id);
     }
 
-    public void saveClient(Client client) {
-        clientRepository.save(client);
+    public Client saveClient(Client client) {
+        return clientRepository.save(client);
     }
 
     public void updateAdmin(Long id, Admin admin) {
