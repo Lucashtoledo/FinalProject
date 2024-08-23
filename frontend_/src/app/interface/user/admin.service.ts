@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { AdminInterface } from './admin-interface';
 import { Observable } from 'rxjs';
 import { ClientInterface } from './client-interface';
+import { FormInterface } from '../form/form-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,11 @@ export class AdminService {
     return this.http.get<AdminInterface[]>(this.apiURL);
   }
 
+  //Busca todos os clientes
+  public getAllClient(): Observable<ClientInterface[]>{
+    return this.http.get<ClientInterface[]>(this.apiURL + '/client');
+  }
+
   public save(newAdmin: AdminInterface): Observable<AdminInterface>{
     return this.http.post<AdminInterface>(this.apiURL, newAdmin + '/newadmin/');
   }
@@ -26,15 +32,24 @@ export class AdminService {
     return this.http.put<AdminInterface>(this.apiURL + '/' + updateAdmin.id, updateAdmin);
   }
 
-  public delete(deleteAdmin: AdminInterface){
-    return this.http.delete(this.apiURL + '/admin/' + deleteAdmin.id);
-  }
-  public saveClient(newClient: ClientInterface): Observable<ClientInterface>{
-    return this.http.post<ClientInterface>(this.apiURL+ '/newclient', newClient);
+  // Deleta o cliente
+  public deleteClient(deleteClient: ClientInterface){
+    return this.http.delete(this.apiURL + '/admin/' + deleteClient.id);
   }
 
+  //Salva um novo cliente
+  public saveClient(newClient: ClientInterface): Observable<ClientInterface>{
+    return this.http.post<ClientInterface>(this.apiURL + '/newclient', newClient);
+  }
+
+  //Busca um cliente pelo CPF
   public findClientByCpf(cpf: string): Observable<ClientInterface> {
     return this.http.get<ClientInterface>(this.apiURL + '/client/' + cpf);
+  }
+
+  //Cria um novo formulário
+  public saveForm(newForm: FormInterface): Observable<FormInterface> {
+    return this.http.post<FormInterface>(this.apiURL + '/forms', newForm);
   }
 
 }

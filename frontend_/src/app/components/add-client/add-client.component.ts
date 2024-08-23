@@ -88,7 +88,7 @@ export class AddClientComponent {
       },
       (error) => {
         if (error.status === 404) {
-          // Se o cliente não for encontrado (404), você pode salvar o novo cliente
+          // Se o cliente não for encontrado salva o novo cliente
           this.adminService.saveClient(client).subscribe(
             () => console.log('Usuário ' + client.name + ' criado'),
             (saveError) => console.error('Erro ao salvar cliente:', saveError)

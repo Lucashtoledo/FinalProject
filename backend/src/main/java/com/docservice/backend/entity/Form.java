@@ -14,22 +14,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Form {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false)
-    private String description;
+    @ElementCollection
+    @Column
+    private List<String> necessaryDoc = new ArrayList<>();
 
     @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();  // Lista de documentos ligad
 
-    public Form(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
 }

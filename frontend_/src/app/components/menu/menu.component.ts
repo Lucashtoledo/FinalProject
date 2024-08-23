@@ -26,15 +26,11 @@ export class MenuComponent {
     },
     {
       title:'Listar Clientes',
-      path:'/'
-    },
-    {
-      title: 'Listar Admins',
-      path:'/adminlist'
+      path:'/clientlist'
     },
     {
       title: 'Criar Formulário',
-      path: '/'
+      path: '/add-form'
     },
     {
       title: 'Adicionar Cliente',

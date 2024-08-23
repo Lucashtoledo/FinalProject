@@ -2,10 +2,11 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableModule, MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
-import { AdminInterface } from '../../interface/user/admin-interface';
 import { AdminService } from '../../interface/user/admin.service';
 import { lastValueFrom } from 'rxjs';
 import { MatButton } from '@angular/material/button';
+import { ClientInterface } from '../../interface/user/client-interface';
+import { Router } from '@angular/router'; // Importe o Router
 
 @Component({
   selector: 'app-admin',
@@ -14,7 +15,6 @@ import { MatButton } from '@angular/material/button';
     .full-width-table {
       width: 100%;
     }
-
   `,
   standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatButton]
@@ -22,12 +22,11 @@ import { MatButton } from '@angular/material/button';
 export class AdminComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<AdminInterface>;
-  dataSource = new MatTableDataSource<AdminInterface>();
+  @ViewChild(MatTable) table!: MatTable<ClientInterface>;
+  dataSource = new MatTableDataSource<ClientInterface>();
 
-  constructor(private adminService: AdminService){};
+  constructor(private adminService: AdminService, private router: Router) {};
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'name', 'email', 'phone', 'actions'];
 
   ngAfterViewInit(): void {
@@ -38,28 +37,32 @@ export class AdminComponent implements AfterViewInit {
   }
 
   async carregarDados(){
-    const admins = await lastValueFrom(await this.adminService.getAll());
-    this.dataSource = new MatTableDataSource<AdminInterface>(admins);
+    const clients = await lastValueFrom(await this.adminService.getAllClient());
+    this.dataSource = new MatTableDataSource<ClientInterface>(clients);
     this.table.dataSource = this.dataSource;
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   };
 
-  async apagarDado(admin: AdminInterface){
-    await lastValueFrom(this.adminService.delete(admin));
-    console.log('Apagou o administrador', admin);
+  async apagarDado(client: ClientInterface){
+    await lastValueFrom(this.adminService.deleteClient(client));
+    console.log('Retirou o acesso do cliente ', client.name);
     await this.carregarDados();
   };
 
-  async salvarDado(admin: AdminInterface){
-    if (admin.id != null){
-      await this.adminService.put(admin);
-      console.log('Usuário ' + admin.name + ' atualizado')
+  async salvarDado(client: ClientInterface){
+    if (client.id != null){
+      await this.adminService.put(client);
+      console.log('Usuário ' + client.name + ' atualizado')
     } else{
-    await this.adminService.save(admin);
-    console.log('Usuário ' + admin.name + ' criado')
+    await this.adminService.save(client);
+    console.log('Usuário ' + client.name + ' criado')
     }
     await this.carregarDados();
+  }
+
+  verFormularios(clientId: number) {
+    this.router.navigate(['/list-form', clientId]);
   }
 
   editarDado(){};

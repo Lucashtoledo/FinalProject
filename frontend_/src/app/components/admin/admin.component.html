@@ -1,38 +1,32 @@
 <div class="mat-elevation-z2">
   <table mat-table class="full-width-table" matSort aria-label="Elements">
-    <!-- Id Column -->
+
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
       <td mat-cell *matCellDef="let row">{{row.id}}</td>
     </ng-container>
 
-    <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
       <td mat-cell *matCellDef="let row">{{row.name}}</td>
     </ng-container>
 
-    <!-- E-mail Column -->
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>E-mail</th>
       <td mat-cell *matCellDef="let row">{{row.email}}</td>
     </ng-container>
 
-    <!-- Phone Column -->
     <ng-container matColumnDef="phone">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Telefone</th>
       <td mat-cell *matCellDef="let row">{{row.phone}}</td>
     </ng-container>
 
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-        <td mat-cell *matCellDef="let row">
-          <button mat-button (click)="apagarDado(row)">Delete</button>
-          <button mat-button (click)="salvarDado(row)">Edit</button>
-
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-button (click)="verFormularios(row.id)">Ver Formulários</button>
+      </td>
+    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

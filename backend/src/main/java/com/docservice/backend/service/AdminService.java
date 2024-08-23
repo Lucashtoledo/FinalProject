@@ -20,32 +20,36 @@ public class AdminService {
     @Autowired
     private ClientRepository clientRepository;
 
-    public List<Admin> getAllAdmins() {
-        return adminRepository.findAll();
-    }
 
+    //--------------------Serviços para o Cliente ------------------------
     public List<Client> getAllClients() {
         return clientRepository.findAll();
-    }
-
-    public Optional<Admin> getAdminById(Long id) {
-        return adminRepository.findById(id);
     }
 
     public Optional<Client> getClientByCpf(String cpf) {
         return clientRepository.findByCpf(cpf);
     }
 
+    public Client saveClient(Client client) {
+        return clientRepository.save(client);
+    }
+
+    //-----------------------Serviços para o Admin------------------------
+
+    public Optional<Admin> getAdminById(Long id) {
+        return adminRepository.findById(id);
+    }
+
+    public List<Admin> getAllAdmins() {
+        return adminRepository.findAll();
+    }
+    
     public Admin saveAdmin(Admin admin) {
         return adminRepository.save(admin);
     }
 
     public void deleteAdmin(Long id) {
         adminRepository.deleteById(id);
-    }
-
-    public Client saveClient(Client client) {
-        return clientRepository.save(client);
     }
 
     public void updateAdmin(Long id, Admin admin) {
@@ -59,4 +63,6 @@ public class AdminService {
             System.out.println("Admin not found");
         }
     }
+
+
 }
