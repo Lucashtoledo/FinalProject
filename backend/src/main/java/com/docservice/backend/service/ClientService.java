@@ -1,5 +1,6 @@
 package com.docservice.backend.service;
 
+import com.docservice.backend.entity.Admin;
 import com.docservice.backend.entity.Client;
 import com.docservice.backend.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,17 @@ public class ClientService {
 
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
+    }
+
+    public void updateClient(Long id, Client client) {
+        Optional<Client> clientOptional = clientRepository.findById(id);
+        if (clientOptional.isPresent()) {
+            clientOptional.get().setName(client.getName());
+            clientOptional.get().setEmail(client.getEmail());
+            clientOptional.get().setPassword(client.getPassword());
+            clientRepository.save(clientOptional.get());
+        }else {
+            System.out.println("Cliente não Encontrado");
+        }
     }
 }

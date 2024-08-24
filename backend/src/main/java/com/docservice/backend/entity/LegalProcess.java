@@ -1,35 +1,32 @@
 package com.docservice.backend.entity;
 
-
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@Data
+
 @Entity
-@Table(name = "documents")
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Document {
+@NoArgsConstructor
+@Data
+public class LegalProcess {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String fileName;  // Nome do arquivo
+    @Column(nullable = true)
+    private String processName;
 
-    @Lob
-    @Column(nullable = false)
-    private byte[] content;    // Conteúdo do arquivo
+    private int numberProcess;
 
     @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Client client;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "formulario_id")
     private Form form;
-
-    @ManyToOne
-    private Client client;
 
 }

@@ -12,20 +12,19 @@ import java.util.List;
 @Entity
 @Table(name = "forms")
 @AllArgsConstructor
-@NoArgsConstructor
+
 public class Form {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true)
     private String name;
 
     @ElementCollection
-    @Column
-    private List<String> necessaryDoc = new ArrayList<>();
+    private List<String> necessaryDoc;
 
-    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Document> documents = new ArrayList<>();  // Lista de documentos ligad
-
+    public Form(){
+        necessaryDoc = new ArrayList<>();
+    }
 }

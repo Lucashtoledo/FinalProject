@@ -5,6 +5,7 @@ import { AdminInterface } from './admin-interface';
 import { Observable } from 'rxjs';
 import { ClientInterface } from './client-interface';
 import { FormInterface } from '../form/form-interface';
+import { ProcessInterface } from '../process/process-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,10 @@ export class AdminService {
   //Cria um novo formulário
   public saveForm(newForm: FormInterface): Observable<FormInterface> {
     return this.http.post<FormInterface>(this.apiURL + '/forms', newForm);
+  }
+
+  public saveProcess(newProcess: ProcessInterface): Observable<ProcessInterface> {
+    return this.http.post<ProcessInterface>(this.apiURL + '/newprocess', newProcess);
   }
 
 }

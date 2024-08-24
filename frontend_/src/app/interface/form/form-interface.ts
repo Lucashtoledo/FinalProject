@@ -1,4 +1,5 @@
 export interface FormInterface {
-  name: string;
-  necessaryDoc: string[];  // Lista de strings, não null
+  id?: number,
+  name: string,
+  necessaryDoc: string[],
 }

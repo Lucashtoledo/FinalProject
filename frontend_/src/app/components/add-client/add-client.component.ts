@@ -63,8 +63,7 @@ export class AddClientComponent {
     cpf: ['', Validators.required],
     email: ['', Validators.required],
     phone: ['', Validators.required],
-    password: ['', Validators.required],
-    numberProcess: [null, Validators.nullValidator]
+    password: ['', Validators.required]
   });
 
   hasUnitNumber = false;

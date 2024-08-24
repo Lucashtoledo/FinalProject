@@ -33,7 +33,7 @@ public class ClientController {
     // Enviar documentos
     @PostMapping("/forms/{formId}/documents")
     public ResponseEntity<Document> uploadDocument(@PathVariable Long formId,
-                                                   @RequestParam Long clientId, // Adicionado clientId aqui
+                                                   @RequestParam Long clientId,
                                                    @RequestParam("file") MultipartFile file) {
         try {
             Document document = documentService.uploadDocument(formId, clientId, file);

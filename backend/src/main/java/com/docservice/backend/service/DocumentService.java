@@ -37,8 +37,6 @@ public class DocumentService {
         document.setFileName(file.getOriginalFilename());
         document.setContent(file.getBytes());  // Armazenando o conteúdo do arquivo no banco
         document.setForm(form);
-        document.setClient(client);
-        document.setUploadDate(LocalDateTime.now().toString());
 
         return documentRepository.save(document);
     }

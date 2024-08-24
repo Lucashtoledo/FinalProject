@@ -1,12 +1,21 @@
 package com.docservice.backend.service;
 
+import com.docservice.backend.DTO.ClientDTO;
+import com.docservice.backend.DTO.LegalProcessDTO;
 import com.docservice.backend.entity.Admin;
 import com.docservice.backend.entity.Client;
+import com.docservice.backend.entity.Form;
+import com.docservice.backend.entity.LegalProcess;
 import com.docservice.backend.repository.AdminRepository;
 import com.docservice.backend.repository.ClientRepository;
+import com.docservice.backend.repository.FormRepository;
+import com.docservice.backend.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +29,30 @@ public class AdminService {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private ProcessRepository processRepository;
+
+    @Autowired
+    private FormRepository formRepository;
+
 
     //--------------------Serviços para o Cliente ------------------------
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+
+    public ResponseEntity<List<ClientDTO>> getAllClients() {
+        List<Client> clients = clientRepository.findAll();
+        List<ClientDTO> clientDTO = new ArrayList<>();
+        for (Client client : clients) {
+            clientDTO.add(toDTO(client));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(clientDTO);
+    }
+    public ClientDTO toDTO(Client client) {
+        return new ClientDTO(
+                client.getId(),
+                client.getName(),
+                client.getEmail(),
+                client.getPhone()
+        );
     }
 
     public Optional<Client> getClientByCpf(String cpf) {
@@ -65,4 +94,29 @@ public class AdminService {
     }
 
 
+    //-----------------------Serviços para processo------------------------
+
+    public ResponseEntity<LegalProcess> saveProcess(LegalProcessDTO legalProcessDTO) {
+        System.out.println("Numero do processo " + legalProcessDTO.numberProcess());
+        System.out.println("Nome do processo " + legalProcessDTO.processName());
+        System.out.println("Id do formulario " + legalProcessDTO.formId());
+        System.out.println("Id do cliente " + legalProcessDTO.clientId());
+        Form form = formRepository.findById(legalProcessDTO.formId()).orElse(null);
+        Client client = clientRepository.findById(legalProcessDTO.clientId()).orElse(null);
+
+
+        if(form != null && client != null) {
+            LegalProcess legalProcess = new LegalProcess();
+            legalProcess.setForm(form);
+            legalProcess.setClient(client);
+            legalProcess.setProcessName(legalProcessDTO.processName());
+            legalProcess.setNumberProcess(legalProcessDTO.numberProcess());
+
+            processRepository.save(legalProcess);
+            return ResponseEntity.status(HttpStatus.CREATED).body(legalProcess);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
+
+

@@ -21,16 +21,8 @@ interface MenuItem{
 export class MenuComponent {
   menuList: MenuItem[] = [
     {
-      title:'Listar Processos',
-      path: '/'
-    },
-    {
       title:'Listar Clientes',
       path:'/clientlist'
-    },
-    {
-      title: 'Criar Formulário',
-      path: '/add-form'
     },
     {
       title: 'Adicionar Cliente',

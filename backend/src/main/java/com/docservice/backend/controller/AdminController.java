@@ -1,9 +1,8 @@
 package com.docservice.backend.controller;
 
-import com.docservice.backend.entity.Admin;
-import com.docservice.backend.entity.Client;
-import com.docservice.backend.entity.Document;
-import com.docservice.backend.entity.Form;
+import com.docservice.backend.DTO.ClientDTO;
+import com.docservice.backend.DTO.LegalProcessDTO;
+import com.docservice.backend.entity.*;
 import com.docservice.backend.repository.ClientRepository;
 import com.docservice.backend.service.AdminService;
 import com.docservice.backend.service.ClientService;
@@ -30,9 +29,6 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
-
-    @Autowired
-    private ClientRepository clientRepository;
 
     @Autowired
     private ClientService clientService;
@@ -94,9 +90,8 @@ public class AdminController {
     }
 
     @GetMapping("/client")
-    public ResponseEntity<List<Client>> getAllClient() {
-        List<Client> clients = adminService.getAllClients();
-        return ResponseEntity.ok(clients);
+    public ResponseEntity<List<ClientDTO>> getAllClient() {
+        return adminService.getAllClients();
     }
 
     // Excluir administrador
@@ -123,5 +118,24 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Atualizar cliente
+    @PutMapping("/client/{id}")
+    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
+        Optional<Client> updateClient = clientService.getClientById(id);
+        if (updateClient.isPresent()) {
+            clientService.updateClient(id, client);
+            return ResponseEntity.ok(client);
+        }else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Adicionar novo processo
+    @PostMapping("/newprocess")
+    public ResponseEntity<LegalProcess> newProcess(@RequestBody LegalProcessDTO legalProcessDTO) {
+        return adminService.saveProcess(legalProcessDTO);
+    }
+
 
 }

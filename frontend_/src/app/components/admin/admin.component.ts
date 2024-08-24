@@ -65,6 +65,10 @@ export class AdminComponent implements AfterViewInit {
     this.router.navigate(['/list-form', clientId]);
   }
 
+  addProcess(clientId: string){
+    this.router.navigate(['/add-form', clientId]);
+  }
+
   editarDado(){};
 
 }
