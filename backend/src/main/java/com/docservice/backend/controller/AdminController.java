@@ -132,10 +132,25 @@ public class AdminController {
     }
 
     // Adicionar novo processo
-    @PostMapping("/newprocess")
-    public ResponseEntity<LegalProcess> newProcess(@RequestBody LegalProcessDTO legalProcessDTO) {
-        return adminService.saveProcess(legalProcessDTO);
+   // @PostMapping("/newprocess")
+   // public ResponseEntity<LegalProcess> newProcess(@RequestBody LegalProcessDTO legalProcessDTO) {
+     //   return adminService.saveProcess(legalProcessDTO);
+    //}
+
+
+
+    @GetMapping("/forms/{id}")
+    public ResponseEntity<List<Form>> getFormById(@PathVariable Long id) {
+        return formService.getFormById(id);
     }
 
+    @PostMapping("/newprocess")
+    public ResponseEntity<LegalProcess> createLegalProcess(@RequestBody CreateProcessRequest request) {
+        Client client = new Client();
+        client.setId(request.getClientId());
 
+        LegalProcess legalProcess = adminService.createLegalProcess(request.getProcessName(), request.getNumberProcess(), request.getFormName(), request.getNecessaryDocs(), client);
+        return ResponseEntity.ok(legalProcess);
+    }
 }
+

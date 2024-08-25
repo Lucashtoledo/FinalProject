@@ -4,13 +4,14 @@ import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
 
-import { ClientInterface } from '../../interface/user/client-interface';
+
+import { FormInterface } from '../../interface/form/form-interface';
 
 
-const EXAMPLE_DATA: ClientInterface[] = [];
+const EXAMPLE_DATA: FormInterface[] = [];
 
-export class AdminDataSource extends DataSource<ClientInterface> {
-  data: ClientInterface[] = EXAMPLE_DATA;
+export class ListFormDatasource extends DataSource<FormInterface> {
+  data: FormInterface[] = EXAMPLE_DATA;
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
@@ -18,7 +19,7 @@ export class AdminDataSource extends DataSource<ClientInterface> {
     super();
   }
 
-  connect(): Observable<ClientInterface[]> {
+  connect(): Observable<FormInterface[]> {
     if (this.paginator && this.sort) {
 
       return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
@@ -33,7 +34,7 @@ export class AdminDataSource extends DataSource<ClientInterface> {
 
   disconnect(): void {}
 
-  private getPagedData(data: ClientInterface[]): ClientInterface[] {
+  private getPagedData(data: FormInterface[]): FormInterface[] {
     if (this.paginator) {
       const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
       return data.splice(startIndex, this.paginator.pageSize);
@@ -42,7 +43,7 @@ export class AdminDataSource extends DataSource<ClientInterface> {
     }
   }
 
-  private getSortedData(data: ClientInterface[]): ClientInterface[] {
+  private getSortedData(data: FormInterface[]): FormInterface[] {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return data;
     }
@@ -51,9 +52,6 @@ export class AdminDataSource extends DataSource<ClientInterface> {
       const isAsc = this.sort?.direction === 'asc';
       switch (this.sort?.active) {
         case 'name': return compare(a.name, b.name, isAsc);
-        case 'email': return compare(a.email, b.email, isAsc);
-        case 'phone': return compare(a.phone, b.phone, isAsc);
-        case 'id': return compare(+a.id, +b.id, isAsc);
         default: return 0;
       }
     });

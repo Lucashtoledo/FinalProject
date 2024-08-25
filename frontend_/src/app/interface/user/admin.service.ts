@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { ClientInterface } from './client-interface';
 import { FormInterface } from '../form/form-interface';
 import { ProcessInterface } from '../process/process-interface';
+import { ProcessRequestInterface } from '../process/processRequest-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -53,8 +54,16 @@ export class AdminService {
     return this.http.post<FormInterface>(this.apiURL + '/forms', newForm);
   }
 
+  /*
   public saveProcess(newProcess: ProcessInterface): Observable<ProcessInterface> {
     return this.http.post<ProcessInterface>(this.apiURL + '/newprocess', newProcess);
   }
+*/
+public saveProcess(request: ProcessRequestInterface): Observable<any> {
+  return this.http.post(`${this.apiURL}/newprocess`, request);
+}
 
+  public getProcessById(clientId: number): Observable<ProcessInterface[]>{
+    return this.http.get<ProcessInterface[]>(this.apiURL + '/forms/' + clientId);
+  }
 }

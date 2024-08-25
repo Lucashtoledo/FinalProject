@@ -2,10 +2,7 @@ package com.docservice.backend.service;
 
 import com.docservice.backend.DTO.ClientDTO;
 import com.docservice.backend.DTO.LegalProcessDTO;
-import com.docservice.backend.entity.Admin;
-import com.docservice.backend.entity.Client;
-import com.docservice.backend.entity.Form;
-import com.docservice.backend.entity.LegalProcess;
+import com.docservice.backend.entity.*;
 import com.docservice.backend.repository.AdminRepository;
 import com.docservice.backend.repository.ClientRepository;
 import com.docservice.backend.repository.FormRepository;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
@@ -96,7 +94,7 @@ public class AdminService {
 
     //-----------------------Serviços para processo------------------------
 
-    public ResponseEntity<LegalProcess> saveProcess(LegalProcessDTO legalProcessDTO) {
+    /*public ResponseEntity<LegalProcess> saveProcess(LegalProcessDTO legalProcessDTO) {
         System.out.println("Numero do processo " + legalProcessDTO.numberProcess());
         System.out.println("Nome do processo " + legalProcessDTO.processName());
         System.out.println("Id do formulario " + legalProcessDTO.formId());
@@ -116,6 +114,53 @@ public class AdminService {
             return ResponseEntity.status(HttpStatus.CREATED).body(legalProcess);
         }
         return ResponseEntity.notFound().build();
+    }
+
+     */
+    public LegalProcess createLegalProcess(String processName, int numberProcess, String formName, List<String> necessaryDocs, Client client) {
+        // Teste de parâmetros recebidos
+        System.out.println("Process Name" + processName);
+        System.out.println("Number Process" + numberProcess);
+        System.out.println("Form Name: " + formName);
+        for (String necessaryDoc : necessaryDocs) {
+            System.out.println(necessaryDoc);
+        }
+
+        Form form = new Form();
+        form.setName(formName);
+
+        // Cria os NecessaryDocs
+        List<NecessaryDoc> necessaryDocList = necessaryDocs.stream()
+                .map(docName -> {
+                    NecessaryDoc necessaryDoc = new NecessaryDoc();
+                    necessaryDoc.setDocumentName(docName);
+
+                    // Relaciona cada NecessaryDoc com um novo Document
+                    Document document = new Document();
+                    document.setFileName(docName + ".pdf");
+                    necessaryDoc.setDocument(document);
+
+                    // Associar o NecessaryDoc ao Form
+                    necessaryDoc.setForm(form); // Adicione esta linha
+
+                    return necessaryDoc;
+                })
+                .collect(Collectors.toList());
+
+        form.setNecessaryDocs(necessaryDocList);
+        // Persiste o formulário para obter o ID gerado
+        formRepository.save(form);
+
+
+        // Cria o processo e associa o formulário
+        LegalProcess legalProcess = new LegalProcess();
+        legalProcess.setProcessName(processName);
+        legalProcess.setNumberProcess(numberProcess);
+        legalProcess.setClient(client);
+        legalProcess.setForm(form);
+
+        // Persiste o processo
+        return processRepository.save(legalProcess);
     }
 }
 

@@ -18,18 +18,19 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String fileName;  // Nome do arquivo
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = true)
     private byte[] content;    // Conteúdo do arquivo
 
-    @ManyToOne
-    @JoinColumn(name = "formulario_id")
-    private Form form;
+    @OneToOne(mappedBy = "document")
+    private NecessaryDoc necessaryDoc;
 
     @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client client;
+
 
 }

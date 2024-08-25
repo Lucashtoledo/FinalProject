@@ -36,7 +36,6 @@ public class DocumentService {
         Document document = new Document();
         document.setFileName(file.getOriginalFilename());
         document.setContent(file.getBytes());  // Armazenando o conteúdo do arquivo no banco
-        document.setForm(form);
 
         return documentRepository.save(document);
     }

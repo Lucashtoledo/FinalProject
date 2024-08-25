@@ -50,16 +50,16 @@ export class AdminComponent implements AfterViewInit {
     await this.carregarDados();
   };
 
-  async salvarDado(client: ClientInterface){
-    if (client.id != null){
-      await this.adminService.put(client);
-      console.log('Usuário ' + client.name + ' atualizado')
-    } else{
-    await this.adminService.save(client);
-    console.log('Usuário ' + client.name + ' criado')
-    }
-    await this.carregarDados();
-  }
+ // async salvarDado(client: ClientInterface){
+  //  if (client.id != null){
+    //  await this.adminService.put(client);
+    //  console.log('Usuário ' + client.name + ' atualizado')
+    //} else{
+    //await this.adminService.save(client);
+    //console.log('Usuário ' + client.name + ' criado')
+    //}
+    //await this.carregarDados();
+ // }
 
   verFormularios(clientId: number) {
     this.router.navigate(['/list-form', clientId]);

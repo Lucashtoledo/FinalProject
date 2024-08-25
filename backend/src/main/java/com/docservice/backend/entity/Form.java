@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "forms")
 @AllArgsConstructor
+@NoArgsConstructor
 
 public class Form {
     @Id
@@ -21,10 +22,6 @@ public class Form {
     @Column(nullable = true)
     private String name;
 
-    @ElementCollection
-    private List<String> necessaryDoc;
-
-    public Form(){
-        necessaryDoc = new ArrayList<>();
-    }
+    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NecessaryDoc> necessaryDocs = new ArrayList<>();
 }
