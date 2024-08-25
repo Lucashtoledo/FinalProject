@@ -9,6 +9,7 @@ import com.docservice.backend.service.ClientService;
 import com.docservice.backend.service.DocumentService;
 import com.docservice.backend.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -146,11 +147,23 @@ public class AdminController {
 
     @PostMapping("/newprocess")
     public ResponseEntity<LegalProcess> createLegalProcess(@RequestBody CreateProcessRequest request) {
+        // Obtem o Id e transforma em um objeto Cliente
         Client client = new Client();
         client.setId(request.getClientId());
 
-        LegalProcess legalProcess = adminService.createLegalProcess(request.getProcessName(), request.getNumberProcess(), request.getFormName(), request.getNecessaryDocs(), client);
-        return ResponseEntity.ok(legalProcess);
+        try{
+            adminService.createLegalProcess(
+                    request.getProcessName(),
+                    request.getNumberProcess(),
+                    request.getFormName(),
+                    request.getNecessaryDocs(),
+                    client);
+            return ResponseEntity.status(HttpStatus.CREATED).body(null);
+
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        }
+
     }
 }
 

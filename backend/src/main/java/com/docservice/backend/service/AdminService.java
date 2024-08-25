@@ -117,7 +117,7 @@ public class AdminService {
     }
 
      */
-    public LegalProcess createLegalProcess(String processName, int numberProcess, String formName, List<String> necessaryDocs, Client client) {
+    public ResponseEntity<LegalProcess> createLegalProcess(String processName, int numberProcess, String formName, List<String> necessaryDocs, Client client) {
         // Teste de parâmetros recebidos
         System.out.println("Process Name" + processName);
         System.out.println("Number Process" + numberProcess);
@@ -126,41 +126,46 @@ public class AdminService {
             System.out.println(necessaryDoc);
         }
 
-        Form form = new Form();
-        form.setName(formName);
+       try{
+           Form form = new Form();
+           form.setName(formName);
 
-        // Cria os NecessaryDocs
-        List<NecessaryDoc> necessaryDocList = necessaryDocs.stream()
-                .map(docName -> {
-                    NecessaryDoc necessaryDoc = new NecessaryDoc();
-                    necessaryDoc.setDocumentName(docName);
+           // Cria os NecessaryDocs
+           List<NecessaryDoc> necessaryDocList = necessaryDocs.stream()
+                   .map(docName -> {
+                       NecessaryDoc necessaryDoc = new NecessaryDoc();
+                       necessaryDoc.setDocumentName(docName);
 
-                    // Relaciona cada NecessaryDoc com um novo Document
-                    Document document = new Document();
-                    document.setFileName(docName + ".pdf");
-                    necessaryDoc.setDocument(document);
+                       // Relaciona cada NecessaryDoc com um novo Document
+                       Document document = new Document();
+                       document.setFileName(docName + ".pdf");
+                       necessaryDoc.setDocument(document);
 
-                    // Associar o NecessaryDoc ao Form
-                    necessaryDoc.setForm(form); // Adicione esta linha
+                       // Associar o NecessaryDoc ao Form
+                       necessaryDoc.setForm(form); // Adicione esta linha
 
-                    return necessaryDoc;
-                })
-                .collect(Collectors.toList());
+                       return necessaryDoc;
+                   })
+                   .collect(Collectors.toList());
 
-        form.setNecessaryDocs(necessaryDocList);
-        // Persiste o formulário para obter o ID gerado
-        formRepository.save(form);
+           form.setNecessaryDocs(necessaryDocList);
+           // Persiste o formulário para obter o ID gerado
+           formRepository.save(form);
 
 
-        // Cria o processo e associa o formulário
-        LegalProcess legalProcess = new LegalProcess();
-        legalProcess.setProcessName(processName);
-        legalProcess.setNumberProcess(numberProcess);
-        legalProcess.setClient(client);
-        legalProcess.setForm(form);
+           // Cria o processo e associa o formulário
+           LegalProcess legalProcess = new LegalProcess();
+           legalProcess.setProcessName(processName);
+           legalProcess.setNumberProcess(numberProcess);
+           legalProcess.setClient(client);
+           legalProcess.setForm(form);
 
-        // Persiste o processo
-        return processRepository.save(legalProcess);
+           // Persiste o processo
+           processRepository.save(legalProcess);
+           return ResponseEntity.status(HttpStatus.CREATED).body(legalProcess);
+       } catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.CREATED).body(null);
+       }
     }
 }
 

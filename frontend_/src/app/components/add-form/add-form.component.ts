@@ -221,12 +221,11 @@ import { ProcessRequestInterface } from '../../interface/process/processRequest-
 
     async onSubmit(): Promise<void> {
       if (this.clientForm.valid) {
-        try {
+
           const formValues = this.clientForm.value;
 
           const clientId = Number(this.route.snapshot.paramMap.get('id'));
 
-          // Cria o objeto de request para criar um processo legal
           const createProcessRequest: ProcessRequestInterface = {
             processName: formValues.processName || '',
             numberProcess: Number(formValues.numberProcess) || 0,
@@ -238,15 +237,10 @@ import { ProcessRequestInterface } from '../../interface/process/processRequest-
 
           // Chama o serviço para criar o processo
           await this.adminService.saveProcess(createProcessRequest).toPromise();
-
-          alert('Processo criado com sucesso!');
-        } catch (error) {
-          console.error('Erro ao criar o processo:', error);
-          alert('Ocorreu um erro ao criar o processo. Por favor, tente novamente.');
-        }
       } else {
         alert('Por favor, preencha todos os campos obrigatórios.');
       }
+      alert('Processo criado com sucesso!');
     }
   }
 
