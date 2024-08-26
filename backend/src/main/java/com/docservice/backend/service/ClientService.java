@@ -1,6 +1,5 @@
 package com.docservice.backend.service;
 
-import com.docservice.backend.entity.Admin;
 import com.docservice.backend.entity.Client;
 import com.docservice.backend.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,4 +41,9 @@ public class ClientService {
             System.out.println("Cliente não Encontrado");
         }
     }
+
+    public Optional<Client> getClientByEmail(String email) {
+        return clientRepository.findByEmail(email);
+    }
+
 }

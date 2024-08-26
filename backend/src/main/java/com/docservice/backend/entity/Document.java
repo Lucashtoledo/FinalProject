@@ -21,6 +21,9 @@ public class Document {
     @Column(nullable = true)
     private String fileName;  // Nome do arquivo
 
+    @Column(nullable = true)
+    private String name;
+
     @Lob
     @Column(nullable = true)
     private byte[] content;    // Conteúdo do arquivo

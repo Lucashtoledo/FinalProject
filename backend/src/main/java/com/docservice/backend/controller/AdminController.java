@@ -1,26 +1,33 @@
 package com.docservice.backend.controller;
 
 import com.docservice.backend.DTO.ClientDTO;
+import com.docservice.backend.DTO.DocumentDTO;
 import com.docservice.backend.DTO.LegalProcessDTO;
+import com.docservice.backend.DTO.LegalProcessSimpleDTO;
 import com.docservice.backend.entity.*;
 import com.docservice.backend.repository.ClientRepository;
-import com.docservice.backend.service.AdminService;
-import com.docservice.backend.service.ClientService;
-import com.docservice.backend.service.DocumentService;
-import com.docservice.backend.service.FormService;
+import com.docservice.backend.repository.DocumentRepository;
+import com.docservice.backend.repository.ProcessRepository;
+import com.docservice.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
 
+    @Autowired
+    private AccessService accessService;
 
     @Autowired
     private FormService formService;
@@ -33,6 +40,12 @@ public class AdminController {
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private ProcessRepository processRepository;
+
+    @Autowired
+    private DocumentRepository documentRepository;
 
     // Criar um novo formulário
     @PostMapping("/forms")
@@ -55,12 +68,6 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    // Listar todos os documentos
-    @GetMapping("/documents")
-    public ResponseEntity<List<Document>> getAllDocuments() {
-        List<Document> documents = documentService.getAllDocuments();
-        return ResponseEntity.ok(documents);
-    }
 
     // Excluir um documento
     @DeleteMapping("/documents/{id}")
@@ -83,7 +90,7 @@ public class AdminController {
         return ResponseEntity.ok(client);
     }
 
-    // Listar todos os admin
+    // Listar todos os admins
     @GetMapping
     public ResponseEntity<List<Admin>> getAllAdmin() {
         List<Admin> admins = adminService.getAllAdmins();
@@ -145,6 +152,15 @@ public class AdminController {
         return formService.getFormById(id);
     }
 
+    @GetMapping("/process/{id}")
+    public ResponseEntity<List<LegalProcessSimpleDTO>> getProcessByClientId(@PathVariable Long id) {
+        List<LegalProcess> processes = processRepository.findByClientId(id);
+        List<LegalProcessSimpleDTO> processDTOs = processes.stream()
+                .map(process -> new LegalProcessSimpleDTO(process.getId() ,process.getProcessName()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(processDTOs);
+    }
+
     @PostMapping("/newprocess")
     public ResponseEntity<LegalProcess> createLegalProcess(@RequestBody CreateProcessRequest request) {
         // Obtem o Id e transforma em um objeto Cliente
@@ -165,5 +181,52 @@ public class AdminController {
         }
 
     }
+
+    @GetMapping("/documents/{id}")
+    public ResponseEntity<List<DocumentDTO>> getDocumentsByProcessId(@PathVariable Long id){
+        return documentService.getDocByProcessId(id);
+    }
+
+    @PostMapping("/access")
+    public ResponseEntity<Access> saveAccess(@RequestBody Access access) {
+        return accessService.saveAccess(access);
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> downloadFull(@RequestParam("docId") Long docId) {
+        return documentService.getDocumentFileById(docId);
+    }
+
+    // Envia um documento
+    @PostMapping("/upload")
+    public ResponseEntity<Void> uploadFile(@RequestParam("docId") Long docId,
+                                           @RequestParam("file") MultipartFile file) {
+        try {
+            // Converter MultipartFile para byte[]
+            byte[] fileBytes = file.getBytes();
+
+            // Chamar o serviço para salvar o documento
+            documentService.uploadFile(docId, fileBytes);
+
+            // Retorna um status de sucesso
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/download-part")
+    public ResponseEntity<byte[]> downloadPart(
+            @RequestParam Long docId,
+            @RequestParam int partIndex) {
+
+        byte[] part = documentService.getDocumentPart(docId, partIndex);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(part);
+    }
+
 }
 

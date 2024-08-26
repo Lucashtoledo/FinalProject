@@ -167,6 +167,11 @@ public class AdminService {
            return ResponseEntity.status(HttpStatus.CREATED).body(null);
        }
     }
+
+    public ResponseEntity<List<LegalProcess>> getProcessesByClientId(Long clientId) {
+        return ResponseEntity.status(HttpStatus.OK).body(processRepository.findByClientId(clientId));
+    }
+
 }
 
 

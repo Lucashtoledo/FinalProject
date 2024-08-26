@@ -8,6 +8,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { AdminService } from '../../interface/user/admin.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { AccessInterface } from '../../interface/access/access-interface';
 
 
 @Component({
@@ -55,7 +58,7 @@ import { AdminService } from '../../interface/user/admin.service';
 })
 export class AddClientComponent {
 
-  constructor(private adminService: AdminService){};
+  constructor(private adminService: AdminService, private snackBar: MatSnackBar, private router: Router,){};
 
   private fb = inject(FormBuilder);
   clientForm = this.fb.group({
@@ -77,25 +80,106 @@ export class AddClientComponent {
     this.adminService.findClientByCpf(client.cpf).subscribe(
       (existingClient) => {
         if (existingClient) {
-          console.log('CPF já cadastrado');
+          this.snackBar.open('CPF já cadastrado', 'Fechar', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center'
+          });
         } else {
+
+          const access: AccessInterface = {
+            email: client.email,
+            password: client.password,
+            role: 'client'
+          };
+
+          // Salva o cliente e o acesso
           this.adminService.saveClient(client).subscribe(
-            () => console.log('Usuário ' + client.name + ' criado'),
-            (error) => console.error('Erro ao salvar cliente:', error)
+            () => {
+              // Salva o acesso após o cliente ser salvo
+              this.adminService.saveAccess(access).subscribe(
+                () => {
+                  this.snackBar.open('Usuário ' + client.name + ' cadastrado com sucesso', 'Fechar', {
+                    duration: 3000,
+                    verticalPosition: 'top',
+                    horizontalPosition: 'center'
+                  });
+                  this.router.navigate(['/clientlist']);
+                },
+                (error) => {
+                  console.error('Erro ao salvar acesso:', error);
+                  this.snackBar.open('Erro ao salvar acesso', 'Fechar', {
+                    duration: 3000,
+                    verticalPosition: 'top',
+                    horizontalPosition: 'center'
+                  });
+                }
+              );
+            },
+            (error) => {
+              console.error('Erro ao salvar cliente:', error);
+              this.snackBar.open('Erro ao salvar cliente', 'Fechar', {
+                duration: 3000,
+                verticalPosition: 'top',
+                horizontalPosition: 'center'
+              });
+            }
           );
         }
       },
       (error) => {
         if (error.status === 404) {
-          // Se o cliente não for encontrado salva o novo cliente
           this.adminService.saveClient(client).subscribe(
-            () => console.log('Usuário ' + client.name + ' criado'),
-            (saveError) => console.error('Erro ao salvar cliente:', saveError)
+            () => {
+              const access: AccessInterface = {
+                email: client.email,
+                password: client.password,
+                role: 'client'
+              };
+
+              this.adminService.saveAccess(access).subscribe(
+                () => {
+                  this.snackBar.open('Usuário ' + client.name + ' cadastrado com sucesso', 'Fechar', {
+                    duration: 3000,
+                    verticalPosition: 'top',
+                    horizontalPosition: 'center'
+                  });
+                  this.router.navigate(['/clientlist']);
+                },
+                (saveError) => {
+                  console.error('Erro ao salvar acesso:', saveError);
+                  this.snackBar.open('Erro ao salvar acesso', 'Fechar', {
+                    duration: 3000,
+                    verticalPosition: 'top',
+                    horizontalPosition: 'center'
+                  });
+                }
+              );
+            },
+            (saveError) => {
+              console.error('Erro ao salvar cliente:', saveError);
+              this.snackBar.open('Erro ao salvar cliente', 'Fechar', {
+                duration: 3000,
+                verticalPosition: 'top',
+                horizontalPosition: 'center'
+              });
+            }
           );
         } else {
           console.error('Erro ao buscar cliente:', error);
+          this.snackBar.open('Erro ao buscar cliente', 'Fechar', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center'
+          });
         }
       }
     );
   }
+
 }
+
+
+
+
+

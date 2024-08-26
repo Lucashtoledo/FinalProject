@@ -1,5 +1,4 @@
-
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AdminInterface } from './admin-interface';
 import { Observable } from 'rxjs';
@@ -7,6 +6,8 @@ import { ClientInterface } from './client-interface';
 import { FormInterface } from '../form/form-interface';
 import { ProcessInterface } from '../process/process-interface';
 import { ProcessRequestInterface } from '../process/processRequest-interface';
+import { DocumentInterface } from '../document/document-interface';
+import { AccessInterface } from '../access/access-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,11 @@ export class AdminService {
 
   public getAll(): Observable<AdminInterface[]>{
     return this.http.get<AdminInterface[]>(this.apiURL);
+  }
+
+  // Busca o processo pelo CPF
+  public getProcessById(clientId: number): Observable<ProcessInterface[]>{
+    return this.http.get<ProcessInterface[]>(this.apiURL + '/process/' + clientId);
   }
 
   //Busca todos os clientes
@@ -63,7 +69,28 @@ public saveProcess(request: ProcessRequestInterface): Observable<any> {
   return this.http.post(`${this.apiURL}/newprocess`, request);
 }
 
-  public getProcessById(clientId: number): Observable<ProcessInterface[]>{
-    return this.http.get<ProcessInterface[]>(this.apiURL + '/forms/' + clientId);
-  }
+public getDocByProcessId(processId: Number): Observable<DocumentInterface[]>{
+  return this.http.get<DocumentInterface[]>(this.apiURL + '/documents/' + processId);
+}
+
+uploadDocument(formData: FormData): Observable<any> {
+  return this.http.post(this.apiURL + '/upload', formData);
+}
+
+public saveAccess(access: AccessInterface): Observable<AccessInterface>{
+  return this.http.post<AccessInterface>(this.apiURL + '/access', access);
+}
+
+downloadFile(docId: number): Observable<Blob> {
+  return this.http.get(`${this.apiURL}/download?docId=${docId}`, {
+    responseType: 'blob'
+  });
+}
+
+downloadFilePart(docId: number, partIndex: number): Observable<Blob> {
+  return this.http.get(`${this.apiURL}/download-part?docId=${docId}&partIndex=${partIndex}`, {
+    responseType: 'blob'
+  });
+}
+
 }

@@ -2,14 +2,17 @@
   <table mat-table class="full-width-table" matSort aria-label="Elements">
 
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-      <td mat-cell *matCellDef="let row">{{row.processName}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let row">{{ row.name.replace('.pdf', '') }}</td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
       <td mat-cell *matCellDef="let row">
-        <button mat-button (click)="verDoc(row.id)">Ver Documentos</button>
+        <button mat-button (click)="downloadDocument(row.id)">Download</button>
+        <button mat-button (click)="downloadFilePart(row.id)">Download Partes</button>
+        <input type="file" accept="application/pdf" (change)="onFileSelected($event, row)" hidden #fileInput>
+        <button mat-button (click)="fileInput.click()">Upload</button>
       </td>
     </ng-container>
 

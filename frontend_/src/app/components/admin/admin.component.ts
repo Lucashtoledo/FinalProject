@@ -6,7 +6,7 @@ import { AdminService } from '../../interface/user/admin.service';
 import { lastValueFrom } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 import { ClientInterface } from '../../interface/user/client-interface';
-import { Router } from '@angular/router'; // Importe o Router
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -44,12 +44,6 @@ export class AdminComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   };
 
-  async apagarDado(client: ClientInterface){
-    await lastValueFrom(this.adminService.deleteClient(client));
-    console.log('Retirou o acesso do cliente ', client.name);
-    await this.carregarDados();
-  };
-
  // async salvarDado(client: ClientInterface){
   //  if (client.id != null){
     //  await this.adminService.put(client);
@@ -68,7 +62,4 @@ export class AdminComponent implements AfterViewInit {
   addProcess(clientId: string){
     this.router.navigate(['/add-form', clientId]);
   }
-
-  editarDado(){};
-
 }

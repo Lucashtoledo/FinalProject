@@ -5,13 +5,13 @@ import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
 
 
-import { ProcessInterface } from '../../interface/process/process-interface';
+import { DocumentInterface } from '../../interface/document/document-interface';
 
 
-const EXAMPLE_DATA: ProcessInterface[] = [];
+const EXAMPLE_DATA: DocumentInterface[] = [];
 
-export class ListFormDatasource extends DataSource<ProcessInterface> {
-  data: ProcessInterface[] = EXAMPLE_DATA;
+export class ListDocDatasource extends DataSource<DocumentInterface> {
+  data: DocumentInterface[] = EXAMPLE_DATA;
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
@@ -19,7 +19,7 @@ export class ListFormDatasource extends DataSource<ProcessInterface> {
     super();
   }
 
-  connect(): Observable<ProcessInterface[]> {
+  connect(): Observable<DocumentInterface[]> {
     if (this.paginator && this.sort) {
 
       return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
@@ -34,7 +34,7 @@ export class ListFormDatasource extends DataSource<ProcessInterface> {
 
   disconnect(): void {}
 
-  private getPagedData(data: ProcessInterface[]): ProcessInterface[] {
+  private getPagedData(data: DocumentInterface[]): DocumentInterface[] {
     if (this.paginator) {
       const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
       return data.splice(startIndex, this.paginator.pageSize);
@@ -43,7 +43,7 @@ export class ListFormDatasource extends DataSource<ProcessInterface> {
     }
   }
 
-  private getSortedData(data: ProcessInterface[]): ProcessInterface[] {
+  private getSortedData(data: DocumentInterface[]): DocumentInterface[] {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return data;
     }
@@ -51,7 +51,7 @@ export class ListFormDatasource extends DataSource<ProcessInterface> {
     return data.sort((a, b) => {
       const isAsc = this.sort?.direction === 'asc';
       switch (this.sort?.active) {
-        case 'name': return compare(a.processName, b.processName, isAsc);
+        case 'name': return compare(a.id, b.id, isAsc);
         default: return 0;
       }
     });

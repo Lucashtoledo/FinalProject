@@ -1,5 +1,6 @@
 package com.docservice.backend.controller;
 
+import com.docservice.backend.DTO.DocumentDTO;
 import com.docservice.backend.entity.Document;
 import com.docservice.backend.entity.Form;
 import com.docservice.backend.service.DocumentService;
@@ -44,9 +45,8 @@ public class ClientController {
     }
 
     // Listar os documentos enviados pelo cliente
-    @GetMapping("/documents")
-    public ResponseEntity<List<Document>> getClientDocuments(@RequestParam Long clientId) {
-        List<Document> documents = documentService.getClientDocuments(clientId);
-        return ResponseEntity.ok(documents);
+    @GetMapping("/documents/{id}")
+    public ResponseEntity<List<DocumentDTO>> getDocumentsByProcessId(@PathVariable Long id){
+        return documentService.getDocByProcessId(id);
     }
 }

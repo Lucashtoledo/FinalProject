@@ -1,5 +1,6 @@
 package com.docservice.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -19,5 +20,6 @@ public class Client extends User {
     private String cpf;
 
     @OneToMany(mappedBy = "client")
+    @JsonBackReference
     private List<LegalProcess> processos;
 }
