@@ -16,6 +16,12 @@ A aplicação consiste em criação de formulários, onde o administrador poder�
 ## Front end
 - Angular
 
+# Ferramentas em desenvolvimento
+## Divisão de documento
+-Essa ferramenta visa dividir documentos PDF em arquivos menores de 4mb
+## Login
+- Será implementado a ferramenta de autenticação
+
 # Autor
 Lucas Henrique de Toledo 
 [https://www.linkedin.com/in/wmazoni](https://github.com/Lucashtoledo)
