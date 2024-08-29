@@ -24,4 +24,4 @@ A aplicação consiste em criação de formulários, onde o administrador poder�
 
 # Autor
 Lucas Henrique de Toledo 
-[https://www.linkedin.com/in/wmazoni](https://github.com/Lucashtoledo)
+(https://github.com/Lucashtoledo)
