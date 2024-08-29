@@ -11,7 +11,7 @@ A aplicação consiste em criação de formulários, onde o administrador poder�
 ## Back end
 - Java
 - Spring Boot
-- JPA / Hibernate
+- JPA
 - Maven
 ## Front end
 - Angular
