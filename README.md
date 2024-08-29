@@ -18,7 +18,7 @@ A aplicação consiste em criação de formulários, onde o administrador poder�
 
 # Ferramentas em desenvolvimento
 ## Divisão de documento
--Essa ferramenta visa dividir documentos PDF em arquivos menores de 4mb
+- Essa ferramenta visa dividir documentos PDF em arquivos menores de 4mb
 ## Login
 - Será implementado a ferramenta de autenticação
 
