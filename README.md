@@ -5,7 +5,7 @@
 
 Subm Form é uma aplicação web com Spring e Angular, desenvolvido durante a **Academia de Java**
 
-A aplicação consiste em criação de formulários, onde o administrador poderá definir quais documentos serão necessários para o cliente.
+A aplicação consiste em criação de formulários, onde o administrador poderá definir quais documentos serão necessários para o cliente, possibilitando fazer o download e upload na própria plataforma.
 
 # Tecnologias utilizadas
 ## Back end
